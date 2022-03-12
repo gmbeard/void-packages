@@ -18,6 +18,7 @@ post_patch() {
 		msg_normal "Applying fuzzymatch patches"
 		patch -slNp1 < "${FILESDIR}/fuzzymatch.patch"
 	fi
+
 	sed -i -e '/CFLAGS/{s/-Os//;s/=/+=/}' \
 		-e '/LDFLAGS/{s/-s//;s/=/+=/}' config.mk
 }
