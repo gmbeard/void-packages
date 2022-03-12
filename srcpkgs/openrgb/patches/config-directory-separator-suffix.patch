@@ -1,0 +1,20 @@
+diff -ruNp1 OpenRGB-release_0.7/ResourceManager.cpp OpenRGB-release_0.7-patched/ResourceManager.cpp
+--- OpenRGB-release_0.7/ResourceManager.cpp	2021-12-30 06:45:07.000000000 +0000
++++ OpenRGB-release_0.7-patched/ResourceManager.cpp	2022-03-12 10:38:41.760488977 +0000
+@@ -20,2 +20,8 @@
+ 
++#ifdef _WIN32
++    char const kDirectorySeparator = '\\';
++#else
++    char const kDirectorySeparator = '/';
++#endif
++
+ ResourceManager* ResourceManager::instance;
+@@ -564,2 +570,7 @@ void ResourceManager::SetConfigurationDi
+ {
++    if (!directory.empty() && directory.back() != kDirectorySeparator)
++    {
++        directory += kDirectorySeparator;
++    }
++
+     settings_manager->LoadSettings(directory + "OpenRGB.json");
