@@ -1,0 +1,80 @@
+diff --git a/src/paste.c b/src/paste.c
+index 0a8d52535..e22022e35 100644
+--- a/src/paste.c
++++ b/src/paste.c
+@@ -62,6 +62,10 @@ static bool have_read_stdin;
+    corresponding lines from each file in parallel. */
+ static bool serial_merge;
+ 
++/* If nonzero, output will be truncated to the shortest of
++   input files. */
++static bool limit_to_shortest;
++
+ /* The delimiters between lines of input files (used cyclically). */
+ static char *delims;
+ 
+@@ -75,6 +79,7 @@ static struct option const longopts[] =
+   {"serial", no_argument, NULL, 's'},
+   {"delimiters", required_argument, NULL, 'd'},
+   {"zero-terminated", no_argument, NULL, 'z'},
++  {"limit-to-shortest", no_argument, NULL, 'l'},
+   {GETOPT_HELP_OPTION_DECL},
+   {GETOPT_VERSION_OPTION_DECL},
+   {NULL, 0, NULL, 0}
+@@ -195,6 +200,8 @@ paste_parallel (size_t nfiles, char **fnamptr)
+   /* True if any fopen got fd == STDIN_FILENO.  */
+   bool opened_stdin = false;
+ 
++  bool a_file_reached_eof = false;
++
+   /* Attempt to open all files.  This could be expanded to an infinite
+      number of files, but at the (considerable) expense of remembering
+      each file and its current offset, then opening/reading/closing.  */
+@@ -237,7 +244,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
+           int err;			/* Input errno value.  */
+           bool sometodo = false;	/* Input chars to process.  */
+ 
+-          if (fileptr[i])
++          if (fileptr[i] && (!limit_to_shortest || !a_file_reached_eof))
+             {
+               chr = getc (fileptr[i]);
+               err = errno;
+@@ -257,6 +264,8 @@ paste_parallel (size_t nfiles, char **fnamptr)
+                   chr = getc (fileptr[i]);
+                   err = errno;
+                 }
++
++              a_file_reached_eof = a_file_reached_eof || (chr == EOF);
+             }
+ 
+           if (! sometodo)
+@@ -444,6 +453,7 @@ each FILE, separated by TABs, to standard output.\n\
+ 
+       fputs (_("\
+   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
++  -l, --limit-to-shortest Limit the items to the shortest of input files\n\
+   -s, --serial            paste one file at a time instead of in parallel\n\
+ "), stdout);
+       fputs (_("\
+@@ -473,8 +483,9 @@ main (int argc, char **argv)
+ 
+   have_read_stdin = false;
+   serial_merge = false;
++  limit_to_shortest = false;
+ 
+-  while ((optc = getopt_long (argc, argv, "d:sz", longopts, NULL)) != -1)
++  while ((optc = getopt_long (argc, argv, "d:lsz", longopts, NULL)) != -1)
+     {
+       switch (optc)
+         {
+@@ -483,6 +494,10 @@ main (int argc, char **argv)
+           delim_arg = (optarg[0] == '\0' ? "\\0" : optarg);
+           break;
+ 
++        case 'l':
++          limit_to_shortest = true;
++          break;
++
+         case 's':
+           serial_merge = true;
+           break;
