@@ -1,0 +1,21 @@
+# Template file for 'semverutil'
+pkgname=semverutil
+version=0.1.0
+revision=1
+build_style=cmake
+configure_args="-DSEMVERUTIL_ENABLE_TESTS=ON"
+short_desc="Command line utility for semantic version numbers"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-2.0-only"
+homepage="https://github.com/gmbeard/semverutil"
+changelog="https://raw.githubusercontent.com/gmbeard/semverutil/main/CHANGELOG.md"
+distfiles="https://github.com/gmbeard/semverutil/releases/download/${version}/semverutil-${version}.tar.xz"
+checksum=2d71300a6eb5c14f08be59f56143cdb4aaec12a14850cb45a503ab97e8aa9514
+
+do_check() {
+	ctest --test-dir build --output-on-failure
+}
+
+post_install() {
+	vman semverutil.1
+}
