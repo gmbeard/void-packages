@@ -1,0 +1,39 @@
+# Template file for 'zenpower3'
+pkgname=zenpower3
+version=0.2.0
+revision=1
+build_style=meta
+hostmakedepends="tar"
+depends="${pkgname}-dkms>=${version}_${revision}"
+short_desc="Temperature, voltage, current and power driver for AMD Zen family CPUs"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-2.0-or-later"
+homepage="https://git.exozy.me/a/zenpower3"
+distfiles="https://git.exozy.me/a/zenpower3/archive/v${version}.tar.gz"
+checksum=28e085d97bde19f273bb85aecdcb7c96a75d47b5a1cf226128eb99b0a9c7c6b3
+subpackages="${pkgname}-dkms"
+
+do_patch() {
+	vsed -i dkms.conf \
+		-e 's;@CFLGS@;;' \
+		-e 's;@VERSION@;'${version}';'
+}
+
+do_install() {
+	vinstall zenpower.c 644 "usr/src/${pkgname}-${version}"
+	vinstall Makefile 644 "usr/src/${pkgname}-${version}"
+	vinstall dkms.conf 644 "usr/src/${pkgname}-${version}"
+	vinstall "${FILESDIR}/zenpower3-blacklist.conf" 644 usr/lib/modprobe.d "${pkgname}.conf"
+	vinstall "${FILESDIR}/zenpower3-modules-load.conf" 644 usr/lib/modules-load.d "${pkgname}.conf"
+}
+
+zenpower3-dkms_package() {
+	short_desc+=" - dkms"
+	depends="dkms xbps-triggers"
+	dkms_modules="${sourcepkg} ${version}"
+
+	pkg_install() {
+		vmove "usr/src"
+		vmove "usr/lib"
+	}
+}
