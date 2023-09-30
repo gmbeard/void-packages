@@ -1,0 +1,28 @@
+# Template file for 'gpu-screen-recorder'
+pkgname=gpu-screen-recorder
+version=2023.09
+revision=1
+hostmakedepends="git"
+makedepends="libX11-devel libXrandr-devel libXcomposite-devel ffmpeg-devel
+wayland-devel pkg-config libdrm-devel pulseaudio-devel libva-devel libcap-devel"
+short_desc="Screen recorder that records a window using the GPU only"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-3.0-or-later"
+homepage="https://git.dec05eba.com/gpu-screen-recorder"
+_repository="https://repo.dec05eba.com/gpu-screen-recorder"
+_commit="f89d23c2d0075dbc8bfaf589634bd75cfad3566c"
+
+do_fetch() {
+	git clone --depth=1 -b master ${_repository} ${wrksrc}
+	cd ${wrksrc}
+	git reset --hard ${_commit}
+}
+
+do_build() {
+	./build.sh
+}
+
+do_install() {
+	vbin "gsr-kms-server"
+	vbin "gpu-screen-recorder"
+}
