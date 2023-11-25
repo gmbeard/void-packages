@@ -1,0 +1,15 @@
+# Template file for 'shadow-cast'
+pkgname=shadow-cast
+version=0.6.3
+revision=1
+build_style=cmake
+configure_args="-DSHADOW_CAST_ENABLE_TESTS=ON"
+hostmakedepends="pkg-config"
+makedepends="ffmpeg-devel libX11-devel libdrm-devel libglvnd-devel pipewire-devel wayland-devel"
+short_desc="GPU accelerated screen and audio recording for Linux"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-2.0-or-later"
+homepage="https://github.com/gmbeard/shadow-cast"
+changelog="https://github.com/gmbeard/shadow-cast/blob/main/CHANGELOG.md"
+distfiles="https://github.com/gmbeard/shadow-cast/releases/download/${version}/shadow-cast-source-${version}.tar.xz"
+checksum=24e94f6b05a3e4f9ceae91cc08e3b358b6b6d22264abde6a140964d9f3950dd2

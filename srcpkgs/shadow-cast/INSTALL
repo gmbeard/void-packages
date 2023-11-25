@@ -1,0 +1,6 @@
+case "${ACTION}" in
+post)
+	setcap cap_sys_admin+ep usr/bin/shadow-cast-kms
+	;;
+esac
+
