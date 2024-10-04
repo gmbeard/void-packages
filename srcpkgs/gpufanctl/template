@@ -1,0 +1,31 @@
+# Template file for 'gpufanctl'
+pkgname=gpufanctl
+version=0.1.1
+revision=1
+build_style=cmake
+configure_args="-DGPUFANCTL_USE_LOCAL_DEPENDENCIES=ON"
+short_desc="GPU fan control utility for Linux"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="MIT, LGPL-3.0-or-later"
+homepage="https://github.com/gmbeard/gpufanctl"
+changelog="https://github.com/gmbeard/gpufanctl/blob/main/CHANGELOG.md"
+_exios_version=0.4.1
+distfiles="https://github.com/gmbeard/gpufanctl/releases/download/${version}/gpufanctl-source-${version}.tar.xz
+ https://github.com/gmbeard/exios/releases/download/${_exios_version}/exios-source-${_exios_version}.tar.xz"
+checksum="a015157d43fdbf9935738871d4719d2f69ca43b81caa3f80a4617d9b957c5168
+ 7447f2100d0bdb972d6cae130a2b50e19db4be4bed38acc4b4de2c86412e8170"
+skip_extraction="exios-source-${_exios_version}.tar.xz"
+
+if [ "$XBPS_CHECK_PKGS" ]; then
+	configure_args+=" -DGPUFANCTL_ENABLE_TESTS=ON"
+fi
+
+post_extract() {
+	vsrcextract -C deps/exios "exios-source-${_exios_version}.tar.xz"
+}
+
+post_install() {
+	vlicense LICENSE
+	vlicense LICENSE-3RD-PARTY
+	vsv gpufanctl
+}
