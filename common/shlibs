@@ -4364,7 +4364,7 @@ libgbinder.so.1 libgbinder-1.1.20_1
 libgxml-0.20.so.2.0.2 gxml-0.20.3_1
 libsunpinyin.so.3 libsunpinyin-3.0.0rc2_1
 libtpm2-totp.so.0 libtpm2-totp-0.3.0_1
-libmujs.so.1.2.0 mujs-1.2.0_2
+libmujs.so.1 mujs-libs-1.3.5_1
 libiir.so.1 libiir1-1.9.3_1
 libabsl_bad_any_cast_impl.so.2401.0.0 abseil-cpp-20240116.1_1
 libabsl_bad_optional_access.so.2401.0.0 abseil-cpp-20240116.1_1

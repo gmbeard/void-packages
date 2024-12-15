@@ -1,24 +1,27 @@
 # Template file for 'mujs'
 pkgname=mujs
-version=1.2.0
-revision=2
+version=1.3.5
+revision=1
 build_style=gnu-makefile
-make_build_args="shell shared"
-make_install_args="prefix=/usr install-static install-shared"
+make_build_args="release"
+make_install_args="prefix=/usr install-common install-shared"
 makedepends="readline-devel"
 short_desc="Embeddable JavaScript interpreter written in C"
 maintainer="dkwo <npiazza@disroot.org>"
 license="ISC"
 homepage="https://mujs.com/"
 distfiles="https://github.com/ccxvii/mujs/archive/refs/tags/${version}.tar.gz"
-checksum=bbb74b96c168e7120f1aa2ce0a42026eba01cff14a9234108c91795f3a4c8cd0
+checksum=78a311ae4224400774cb09ef5baa2633c26971513f8b931d3224a0eb85b13e0b
 
 CFLAGS="-DHAVE_READLINE"
 
-post_install() {
-	mv ${DESTDIR}/usr/lib/libmujs.so ${DESTDIR}/usr/lib/libmujs.so.${version}
-	ln -s libmujs.so.${version} ${DESTDIR}/usr/lib/libmujs.so
-	vlicense COPYING
+mujs-libs_package() {
+	short_desc+=" - libs"
+	pkg_install() {
+		vmove usr/lib/*.so
+		vmove usr/lib/*.so.*
+		vlicense COPYING
+	}
 }
 
 mujs-devel_package() {
@@ -26,8 +29,7 @@ mujs-devel_package() {
 	depends="${sourcepkg}>=${version}_${revision}"
 	pkg_install() {
 		vmove usr/include
- 		vmove usr/lib/*.a
- 		vmove usr/lib/*.so
+		vmove usr/lib/*.a
 		vmove usr/lib/pkgconfig
 	}
 }

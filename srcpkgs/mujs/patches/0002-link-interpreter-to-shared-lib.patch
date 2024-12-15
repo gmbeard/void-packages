@@ -1,0 +1,13 @@
+diff -u -r mujs-1.3.5/Makefile mujs-1.3.5-patched/Makefile
+--- a/Makefile	2024-12-15 13:59:00.882576196 +0000
++++ b/Makefile	2024-12-15 13:59:48.748748460 +0000
+@@ -108,7 +108,7 @@
+ build/release/libmujs.a: build/release/libmujs.o
+ 	$(AR) cr $@ $^
+-build/release/mujs: main.c build/release/libmujs.o
++build/release/mujs: main.c build/release/libmujs.$(SO)
+ 	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm $(READLINE_CFLAGS) $(READLINE_LIBS)
+-build/release/mujs-pp: pp.c build/release/libmujs.o
++build/release/mujs-pp: pp.c build/release/libmujs.$(SO)
+ 	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm
+ 
