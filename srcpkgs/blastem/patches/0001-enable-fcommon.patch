@@ -1,0 +1,12 @@
+diff -u -N -r blastem-0.6.2/Makefile blastem-0.6.2-orig/Makefile
+--- a/Makefile	2026-07-11 11:22:27.671556586 +0100
++++ b/Makefile	2026-07-11 09:40:34.358031748 +0100
+@@ -36,7 +36,7 @@
+ EXE:=
+ 
+ HAS_PROC:=$(shell if [ -d /proc ]; then /bin/echo -e -DHAS_PROC; fi)
+-CFLAGS:=-std=gnu99 -Wreturn-type -Werror=return-type -Werror=implicit-function-declaration -Wno-unused-value $(HAS_PROC) -DHAVE_UNISTD_H
++CFLAGS:=-std=gnu99 -fcommon -Wreturn-type -Werror=return-type -Werror=implicit-function-declaration -Wno-unused-value $(HAS_PROC) -DHAVE_UNISTD_H
+ 
+ ifeq ($(OS),Darwin)
+ LIBS=sdl2 glew

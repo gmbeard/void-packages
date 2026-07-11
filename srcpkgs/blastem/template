@@ -1,0 +1,44 @@
+# Template file for 'blastem'
+pkgname=blastem
+version=0.6.2
+revision=1
+build_style=gnu-makefile
+make_build_args="HOST_ZLIB=1"
+make_build_target="blastem"
+make_use_env=yes
+hostmakedepends="pkg-config"
+makedepends="glew-devel libglvnd-devel SDL2-devel zlib-devel"
+short_desc="Open source, higly accurate emulator for the Genesis/Megadrive"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-3.0-or-later"
+homepage="https://www.retrodev.com/blastem/"
+changelog="https://www.retrodev.com/blastem/changes.html"
+_srchash="8aeac7bd9fa7"
+_site="www.retrodev.com"
+distfiles="https://${_site}/repos/blastem/archive/${_srchash}.tar.gz
+	https://${_site}/blastem/blastem64-${version}.tar.gz"
+checksum="af158d3184927ef5210258629859d730956245df925ac81a95637c124d66dbd2
+	ffc63bac0ac619917a5a2e5323fad973932379be80b058dab8059d0f22ee278a"
+skip_extraction="blastem64-${version}.tar.gz"
+
+post_build() {
+	vextract \
+		-C .xbps_additional_assets \
+		--strip-components=1 \
+		"${XBPS_SRCDISTDIR}/${pkgname}-${version}/blastem64-${version}.tar.gz"
+}
+
+do_install() {
+	local target_dir="/var/games/blastem"
+	vinstall blastem 755 "${target_dir}"
+	vcopy shaders "${target_dir}"
+	vinstall default.cfg 644 "${target_dir}"
+	vinstall rom.db 644 "${target_dir}"
+	vinstall gamecontrollerdb.txt 644 "${target_dir}"
+	vinstall .xbps_additional_assets/menu.bin 644 "${target_dir}"
+}
+
+post_install() {
+	vmkdir "/usr/bin"
+	ln -s "/var/games/blastem/blastem" "${DESTDIR}/usr/bin/blastem"
+}
