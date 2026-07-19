@@ -1,0 +1,13 @@
+diff -u -r bsnes-115-orig/hiro/gtk/application.cpp bsnes-115/hiro/gtk/application.cpp
+--- a/hiro/gtk/application.cpp	2026-07-19 10:15:27.344641834 +0100
++++ b/hiro/gtk/application.cpp	2026-07-19 10:16:49.804796758 +0100
+@@ -82,6 +82,9 @@
+ 
+ auto pApplication::initialize() -> void {
+   #if defined(DISPLAY_XORG)
++  #if HIRO_GTK==3
++  gdk_set_allowed_backends("x11");
++  #endif
+   state().display = XOpenDisplay(nullptr);
+   state().screenSaverXDG = (bool)execute("xdg-screensaver", "--version").output.find("xdg-screensaver");
+ 

@@ -1,0 +1,20 @@
+# Template file for 'bsnes'
+pkgname=bsnes
+version=115
+revision=1
+build_style=gnu-makefile
+make_build_args="-C bsnes threaded=true hiro=gtk3"
+hostmakedepends="pkg-config"
+makedepends="alsa-lib-devel libao-devel gtk+3-devel gtksourceview-devel
+	libglvnd-devel libgomp-devel libopenal-devel libXv-devel
+	pulseaudio-devel SDL2-devel"
+short_desc="SNES emulator focused on performance, features, and ease of use"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/bsnes-emu/bsnes"
+distfiles="https://github.com/bsnes-emu/bsnes/archive/refs/tags/v${version}.tar.gz"
+checksum=e51d25f95b8fbcb91470b3dc8844d87206b74f3a164e41e6db271601e0cff93c
+
+do_install() {
+	make ${make_build_args} prefix=${DESTDIR}/usr install
+}
