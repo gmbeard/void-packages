@@ -1,0 +1,44 @@
+# Template file for 'remc2'
+pkgname=remc2
+version=0.9.13.3
+revision=1
+_suffix="-alpha-stable"
+_findfirst_hash=2c4733bb77cb3357c691c7a6b7a46baeed2d5fe1
+build_style=cmake
+build_helper=cmake-wxWidgets-gtk3
+configure_args="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/var/games/remc2"
+hostmakedepends="pkg-config"
+makedepends="fmt-devel SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
+ json-c++ spdlog wxWidgets-common-devel wxWidgets-gtk3-devel"
+short_desc="Recode Binary code of game Magic Carpet2"
+maintainer="Greg Beard <gmbeard@googlemail.com>"
+license="MIT"
+homepage="https://github.com/turican0/remc2"
+changelog="https://github.com/turican0/remc2/releases"
+distfiles="https://github.com/turican0/remc2/archive/refs/tags/${version}${_suffix}.tar.gz
+ https://github.com/MathieuTurcotte/findfirst/archive/${_findfirst_hash}.tar.gz"
+checksum="e24adedf316c56df8241e7e3d91a159dec164a5ce74663a14093fde68f698a86
+ f7cf3ab6a0a72604749319fb99279ab223cd33a31bf7ebc4aea8934fd7ddef9f"
+skip_extraction="${_findfirst_hash}.tar.gz"
+
+CXXFLAGS="-DSPDLOG_FMT_EXTERNAL=1"
+
+post_extract() {
+	vsrcextract -C findfirst "${_findfirst_hash}.tar.gz"
+
+	# License is in the README...
+	local startlicense=$(awk '/Copyright.* Magic/ { print NR; }' README.md)
+	local endlicense=$(wc -l README.md | cut -d' ' -f1)
+	sed -n "${startlicense},${endlicense}p" README.md > LICENSE
+}
+
+post_install() {
+	vlicense LICENSE
+
+	vinstall check_install.sh 755 /var/games/remc2/bin
+
+	vmkdir /usr/bin
+	ln -s /var/games/remc2/bin/remc2 "${DESTDIR}/usr/bin/remc2"
+	ln -s /var/games/remc2/bin/remc2-configurator "${DESTDIR}/usr/bin/remc2-configurator"
+	ln -s /var/games/remc2/bin/remc2-editor "${DESTDIR}/usr/bin/remc2-editor"
+}
